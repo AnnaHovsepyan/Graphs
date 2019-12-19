@@ -1,0 +1,207 @@
+package com.example.mypackage;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+public class Main {
+public static void main(String[] args) throws IOException {
+BufferedReader input = new BufferedReader(new
+InputStreamReader(System.in));
+int m, i;
+System.out.println("Ներմուծի՛ր գագաթերի քանակը");
+String inputString = input.readLine();
+do {
+m = Integer.parseInt(inputString);
+} while (m < 2);
+int[][] a = new int[m][m];
+//Create an empty matrix
+initial_0(m, a);
+System.out.println("Ներմուծի՛ր կապերի քանակը");
+String inputR = input.readLine();
+int r = Integer.parseInt(inputR);
+//
+int u, v;
+int[] t = new int[r];
+int[] s = new int[r];for (i = 0; i < r; i++) {
+System.out.println("Ներմուծի՛ր Cij տարրերը");
+String inputU = input.readLine();
+u = Integer.parseInt(inputU);
+String inputV = input.readLine();
+v = Integer.parseInt(inputV);
+t[i] = u;
+s[i] = v;
+if (u != 0 && v != 0)
+add(u, v, a);
+}
+int[] t1 = new int[m];
+int mutq = t_1(s, r, t1,m);
+System.out.println("Մուտքային տարրերն են");
+for (i = 0; i < mutq; i++)
+System.out.println(t1[i] + "ը");
+int[] t2 = new int[m];
+System.out.println("Միջանկյալ տարրերն են");
+double mij = t_2(t, a, m, r, t2);
+for (i = 0; i < mij; i++)
+System.out.println(t2[i] + "ը");
+int[] t3 = new int[m];
+System.out.println("Ելքային տարրերն են");
+int elq = t_3(s, t, r, t3);
+for (i = 0; i < elq; i++)
+System.out.println(t3[i] + "ը");
+
+displayMatrix(m, a);int[][] deltaa = new int[m][m];
+int[][] mult = new int[m][m];
+int T;
+int[] t4 = new int[m];
+if (ifF(m, a) == 0) {
+T=t_4(a, m, t4);
+for (i = 0; i < T; i++){
+System.out.println("t4 տարրերն են ");
+System.out.println(t4[i]);}
+multiplication1(a, m, mult, deltaa);
+displayMatrix(m,mult);
+int N=0;
+while (aMatrix(m, mult) == 1) {
+multiplication(a, m, mult, deltaa);
+System.out.println();
+displayMatrix(m,mult);
+N++;
+}
+}
+ /*Gets the list of outgoing edges of a vertex. Each line of output has an
+     even number of integer values to be considered in pairs. The first value
+     is the index of a vertex that the edges goes to, the second value is the
+     weight of that edge and the ith string represents the outgoing edges of
+     vertex i in the graph.*/
+displayDeltaMatrix(m,deltaa);
+double t5=t_5(a, m);
+System.out.println("t5 տարրերն են");
+System.out.println(t5);
+double t6=t_6(t3,a, elq);
+System.out.println("t6 տարրերն են");
+System.out.println(t6);
+double Kmj= mij/m;System.out.println("Kմիջ ");
+System.out.println(Kmj);
+double Knk= t5/r;
+System.out.println("Kնկ ");
+System.out.println(Knk);
+double Kkrk=2*t6/elq*(elq-1);
+System.out.println("Kկրկ");
+System.out.println(Kkrk);
+}
+//Method to create a 0 initialize matrix
+public static void initial_0(int m, int[][] a) {
+for (int i = 0; i < m; i++)
+for (int j = 0; j < m; j++)
+a[i][j] = 0;
+}
+//Method to add 1s to graph  
+public static void add(int u, int v, int[][] a) {
+a[u - 1][v - 1] = 1;
+}
+//***Method to count t1
+public static int t_1(int[] s, int r, int[] t1,int m) {
+int mutq=0;int j;
+for(int i=1;i<=m;i++){
+for( j=0;j<r;j++)
+if(i==s[j])break;
+if(j==r) t1[mutq++]=i;
+}
+return mutq;}
+//***Method to count t2
+public static int t_2(int[] t, int[][] a, int m, int r, int[] t2) {
+int mij = 0;
+for (int i = 0; i < m; i++)
+for (int j = 0; j < m; j++)
+if (a[i][j] == 1) {
+t2[mij++] = i + 1;
+break;
+}
+return mij;
+}
+//***Method to count t3 
+public static int t_3(int[] s, int[] t, int r, int[] t3) {
+int elq = 0;
+for (int i = 0; i < r; i++)
+if (s[i] == 0) t3[elq++] = t[i];
+return elq;
+}
+//*** This function display an adjacency Matrix
+public static void displayMatrix(int v, int[][] a) {
+for (int i = 0; i < v; i++) {
+for (int j = 0; j < v; j++)
+System.out.print(a[i][j] + " "); 
+System.out.println();
+}
+}
+
+public static int ifF(int m, int[][] a) {
+int q = 0;
+for (int i = 0; i < m; i++)
+if (a[i][i] != 0) q++;
+if (q == 0) return 0;
+return 1;
+}
+public static int aMatrix(int m, int[][] mult) {
+int q = 0;
+for (int i = 0; i < m; i++)
+for (int j = 0; j < m; j++)
+if (mult[i][j] != 0) q++;
+if (q == 0) return 0;
+return 1;
+}
+//Method to generate a A1 matrix
+static void multiplication1(int[][] a, int m, int[][] mult, int[][] delta) {
+int i, j, k;
+for (i = 0; i < m; ++i)
+for (j = 0; j < m; ++j)
+{ mult[i][j]=0;
+for (k = 0; k < m; ++k) {
+mult[i][j]+= a[i][k] * a[k][j];
+}delta[i][j] = mult[i][j]+a[i][j];
+}
+}
+//***Method to count t4 
+static int t_4(int[][] a, int m, int []t4) {
+int T = 0;
+for (int j = 0; j < m; j++) {
+int q = 0;
+for (int i = 0; i < m; i++) {
+if (a[i][j] == 0) q++;
+}
+if (q == m) t4[T++] = j+1;
+}
+return T;
+}
+//Method to generate all A matrices and a delta matrix
+static void multiplication(int[][] a,int m, int [][]mult,int[][] delta) {
+int i, j, k;
+for (i = 0; i < m; ++i)
+for (j = 0; j < m; ++j)
+{ mult[i][j]=0;
+for (k = 0; k < m; ++k) {
+mult[i][j]+= mult[i][k] * a[k][j];
+}
+delta[i][j] += mult[i][j];}}
+
+// ***Method to count t5֊ը
+static int t_5(int [][]a,int m){
+int t5=0;
+for(int i=0;i<m;i++)
+for(int j=0;j<m;j++){
+if(a[i][j]==1)t5++;}
+return t5;}
+//***Method to count t6
+static int t_6(int []t3,int [][]a,int elq){
+int t6=0,u,v;
+for(int i=0;i<elq;i++)
+for(int j=0;j<elq;j++){
+u=t3[i]-1;
+v=t3[j]-1;
+if(a[u][v]==1)t6++;}
+return t6; }
+//*** Method to display a delta matrix
+static void displayDeltaMatrix(int m,int[][] deltaa){
+for(int i=0;i<m;i++){
+for(int j=0;j<m;j++)
+System.out.print(deltaa[i][j]);
+System.out.println();}}}
